@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZlapoKazeno | Forge 1.20.1 Modpack</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter for clean modern UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'zk-bg': '#09090b',       // Zinc 950
+                        'zk-card': '#18181b',     // Zinc 900
+                        'zk-border': '#27272a',   // Zinc 800
+                        'zk-accent': '#10b981',   // Emerald 500 (Minecraft vibe)
+                        'zk-accent-hover': '#059669', // Emerald 600
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #09090b;
+            color: #d4d4d8; /* zinc-300 */
+            overflow-x: hidden;
+            /* Subtle grid background */
+            background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Clean Glass/Card styling */
+        .glass-card {
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .glass-card:hover {
+            border-color: #3f3f46; /* zinc-700 */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+        /* Toast Animation */
+        .copy-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+        }
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Mod Grid Items */
+        .mod-item {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #a1a1aa; /* zinc-400 */
+            transition: all 0.2s;
+        }
+        .mod-item:hover {
+            background: #27272a;
+            color: #f4f4f5; /* zinc-100 */
+        }
+        .mod-item::before {
+            content: '\f12e'; /* fa-puzzle-piece */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #10b981; /* emerald-500 */
+            font-size: 0.75rem;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+    </style>
+</head>
+<body class="antialiased selection:bg-zk-accent selection:text-white font-sans">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-zk-bg/80 backdrop-blur-md border-b border-zk-border" id="navbar">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-zk-accent flex items-center justify-center text-white">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-white">
+                    ZlapoKazeno
+                </h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <a href="#download" class="px-5 py-2 rounded-md bg-white text-black font-semibold text-sm hover:bg-zinc-200 transition-colors">
+                    Download Modpack
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 pt-32 pb-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-24 animate-fade-in-up">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-zk-accent animate-pulse"></span>
+                    Forge 1.20.1
+                </div>
+                
+                <h2 class="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
+                    ZlapoKazeno Multiplayer
+                </h2>
+                
+                <p class="text-lg text-zinc-400 max-w-2xl mx-auto mb-10">
+                    Selamat datang di tutorial join server modpack ZlapoKazeno! Udah siap main bareng? Langsung copy IP servernya dan ikutin panduan install modpack di bawah.
+                </p>
+
+                <!-- IP Copier -->
+                <div class="flex justify-center mb-12">
+                    <div class="flex items-center bg-zk-card border border-zk-border rounded-lg p-1.5 shadow-lg group">
+                        <div class="px-4 py-2 text-zinc-300 font-mono text-sm sm:text-base flex items-center gap-3">
+                            <i class="fa-solid fa-server text-zinc-500"></i>
+                            <span id="server-ip" class="font-semibold text-white">premium-2.vy-node.my.id:25578</span>
+                        </div>
+                        <button onclick="copyIP()" class="ml-2 px-4 py-2 rounded-md bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-copy"></i> Copy IP
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Support Links -->
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <a href="https://www.youtube.com/@Adisanopalz" target="_blank" class="px-5 py-2.5 rounded-md border border-zinc-800 bg-zinc-900 hover:border-red-500 flex items-center gap-2 text-zinc-400 hover:text-white transition-all">
+                        <i class="fa-brands fa-youtube text-red-500"></i>
+                        <span class="font-medium text-sm">Subscribe YT</span>
+                    </a>
+                    <a href="https://saweria.co/Sanopalz/" target="_blank" class="px-5 py-2.5 rounded-md border border-zinc-800 bg-zinc-900 hover:border-yellow-500 flex items-center gap-2 text-zinc-400 hover:text-white transition-all">
+                        <i class="fa-solid fa-mug-hot text-yellow-500"></i>
+                        <span class="font-medium text-sm">Sawer / Donasi</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Notes / Warning -->
+            <div class="animate-fade-in-up stagger-1 mb-16">
+                <div class="border border-yellow-500/30 bg-yellow-500/10 rounded-xl p-5 flex items-start gap-4">
+                    <i class="fa-solid fa-circle-exclamation text-yellow-500 text-xl mt-0.5"></i>
+                    <div>
+                        <h3 class="font-semibold text-yellow-500 mb-1">Notes Penting!</h3>
+                        <p class="text-zinc-300 text-sm leading-relaxed">
+                            Jangan nambah atau ngurangin mod sendiri kalau nggak paham caranya ya, nanti malah error atau crash wkwk. Cukup pakai file yang udah disediain di bawah supaya bisa masuk ke server dengan aman.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="download" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                <!-- Download Section -->
+                <section class="animate-fade-in-up stagger-2">
+                    <div class="glass-card p-6 h-full">
+                        <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-download text-zk-accent"></i> Download Modpack
+                        </h3>
+                        <p class="text-zinc-400 text-sm mb-6">Pilih format sesuai launcher yang kamu pakai.</p>
+                        
+                        <div class="space-y-4">
+                            <!-- Zip Download -->
+                            <div class="border border-zk-border bg-black/40 rounded-lg p-5 flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-semibold text-white flex items-center gap-2">
+                                        <i class="fa-regular fa-file-zipper text-blue-400"></i> Format .ZIP
+                                    </h4>
+                                    <p class="text-xs text-zinc-500 mt-1">Untuk Prism Launcher, MultiMC, ATLauncher</p>
+                                </div>
+                                <a href="https://bit.ly/donglodzlapokazemodpack" target="_blank" class="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium transition-colors">
+                                    Unduh
+                                </a>
+                            </div>
+
+                            <!-- Mrpack Download -->
+                            <div class="border border-zk-border bg-black/40 rounded-lg p-5 flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-semibold text-white flex items-center gap-2">
+                                        <i class="fa-solid fa-box-archive text-green-400"></i> Format .MRPACK
+                                    </h4>
+                                    <p class="text-xs text-zinc-500 mt-1">Khusus pengguna Modrinth App (Lebih Gampang)</p>
+                                </div>
+                                <a href="https://bit.ly/donglodzlapokazemodpack" target="_blank" class="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium transition-colors">
+                                    Unduh
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 text-center text-xs text-zinc-500">
+                            Atau klik manual: <a href="https://bit.ly/donglodzlapokazemodpack" target="_blank" class="text-zk-accent hover:underline">bit.ly/donglodzlapokazemodpack</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tutorial Section -->
+                <section class="animate-fade-in-up stagger-3">
+                    <div class="glass-card p-6 h-full">
+                        <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open text-zk-accent"></i> Cara Pasang
+                        </h3>
+                        <p class="text-zinc-400 text-sm mb-6">Pilih tutorial sesuai launcher kamu.</p>
+
+                        <div class="space-y-3">
+                            <!-- Prism Tutorial -->
+                            <div class="border border-zk-border rounded-lg bg-black/40 overflow-hidden">
+                                <button onclick="toggleTutorial('prism-tut')" class="w-full flex justify-between items-center p-4 focus:outline-none hover:bg-zinc-800/50 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://prismlauncher.org/img/app_icon_128.png" alt="Prism" class="w-6 h-6 grayscale">
+                                        <span class="font-semibold text-sm text-zinc-200">Tutorial Prism Launcher (.zip)</span>
+                                    </div>
+                                    <i id="icon-prism-tut" class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 text-xs"></i>
+                                </button>
+                                <div id="prism-tut" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                                    <div class="p-4 border-t border-zk-border text-zinc-400 text-sm">
+                                        <ol class="list-decimal list-inside space-y-2">
+                                            <li>Buka Prism Launcher.</li>
+                                            <li>Klik <span class="text-white font-medium">Add Instance</span> di menu atas.</li>
+                                            <li>Pilih tab <span class="text-white font-medium">Import</span> (Import from zip).</li>
+                                            <li>Klik tombol <span class="text-white font-medium">Browse</span> dan pilih file <code>.zip</code> yang diunduh.</li>
+                                            <li>Beri nama bebas (misal: ZlapoKazeno Server), klik OK.</li>
+                                            <li>Tunggu proses download mod selesai.</li>
+                                            <li>Klik Play/Launch!</li>
+                                        </ol>
+                                        <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-xs text-yellow-200/80">
+                                            *Pastikan setting Java kamu menggunakan <strong>Java 17</strong> karena ini Forge 1.20.1.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modrinth Tutorial -->
+                            <div class="border border-zk-border rounded-lg bg-black/40 overflow-hidden">
+                                <button onclick="toggleTutorial('modrinth-tut')" class="w-full flex justify-between items-center p-4 focus:outline-none hover:bg-zinc-800/50 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-6 h-6 rounded bg-[#1bd96a] flex items-center justify-center">
+                                            <i class="fa-solid fa-m text-black text-xs"></i>
+                                        </div>
+                                        <span class="font-semibold text-sm text-zinc-200">Tutorial Modrinth App (.mrpack)</span>
+                                    </div>
+                                    <i id="icon-modrinth-tut" class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 text-xs"></i>
+                                </button>
+                                <div id="modrinth-tut" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                                    <div class="p-4 border-t border-zk-border text-zinc-400 text-sm">
+                                        <ol class="list-decimal list-inside space-y-2">
+                                            <li>Buka aplikasi Modrinth.</li>
+                                            <li>Klik ikon <span class="text-white font-medium">(+) Plus</span> atau Add Instance.</li>
+                                            <li>Pilih menu <span class="text-white font-medium">From File / Import</span>.</li>
+                                            <li>Pilih file <code>.mrpack</code> yang barusan kamu download.</li>
+                                            <li>Modrinth bakal otomatis download semua modnya.</li>
+                                            <li>Kalau udah selesai, tinggal klik Play!</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Mod List Section -->
+            <section class="animate-fade-in-up stagger-4">
+                <div class="glass-card p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-zk-border pb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-list-ul text-zk-accent"></i> Isi Modpack
+                            </h3>
+                            <p class="text-zinc-400 text-sm mt-1">Daftar modifikasi yang terinstall (40+ Mods)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-black/30 rounded-lg p-4 h-[350px] overflow-y-auto">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="mod-item">Alex's Mobs</div>
+                            <div class="mod-item">Architectury</div>
+                            <div class="mod-item">Artifacts</div>
+                            <div class="mod-item">Blooming Biosphere</div>
+                            <div class="mod-item">Chat Heads</div>
+                            <div class="mod-item">Citadel</div>
+                            <div class="mod-item">Cloth Config v10 API</div>
+                            <div class="mod-item">Clumps</div>
+                            <div class="mod-item">CosmeticArmours</div>
+                            <div class="mod-item">CosmeticWeapons</div>
+                            <div class="mod-item">Create</div>
+                            <div class="mod-item">Critters and Companions</div>
+                            <div class="mod-item">Curios API</div>
+                            <div class="mod-item">Dynamic FPS</div>
+                            <div class="mod-item">Dynamic Trees</div>
+                            <div class="mod-item">Embeddium</div>
+                            <div class="mod-item">EntityCulling</div>
+                            <div class="mod-item">FallingTree</div>
+                            <div class="mod-item">Farmer's Delight</div>
+                            <div class="mod-item">Ferrite Core</div>
+                            <div class="mod-item">Forgified Fabric API</div>
+                            <div class="mod-item">GeckoLib 4</div>
+                            <div class="mod-item">Handcrafted</div>
+                            <div class="mod-item">ImmediatelyFast</div>
+                            <div class="mod-item">Jade</div>
+                            <div class="mod-item">Lootr</div>
+                            <div class="mod-item">Magic Skin</div>
+                            <div class="mod-item">Mouse Tweaks</div>
+                            <div class="mod-item">MyServerIsCompatible</div>
+                            <div class="mod-item">Naturalist</div>
+                            <div class="mod-item">Oculus</div>
+                            <div class="mod-item">Patchouli</div>
+                            <div class="mod-item">Player Animator</div>
+                            <div class="mod-item">Resourceful Lib</div>
+                            <div class="mod-item">Roughly Enough Items (REI)</div>
+                            <div class="mod-item">ShulkerBoxTooltip</div>
+                            <div class="mod-item">Simple Voice Chat</div>
+                            <div class="mod-item">Sinytra Connector</div>
+                            <div class="mod-item">Sophisticated Backpacks</div>
+                            <div class="mod-item">Sophisticated Core</div>
+                            <div class="mod-item">Timeless & Classics Guns: Zero</div>
+                            <div class="mod-item">Viola's Wardrobe</div>
+                            <div class="mod-item">YetAnotherConfigLib</div>
+                            <div class="mod-item">[Let's Do] Farm & Charm</div>
+                            <div class="mod-item">[Let's Do] Furniture</div>
+                            <div class="mod-item">[Let's Do] Vinery</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="copy-toast px-4 py-3 rounded-lg bg-zinc-800 border border-zinc-700 shadow-xl flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-zk-accent"></i>
+        <span class="font-medium text-white text-sm">IP Server berhasil dicopy!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-zk-border bg-zk-bg mt-10 py-8">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-zinc-500 text-sm">© 2026 ZlapoKazeno.</p>
+            <div class="flex gap-6 text-sm">
+                <a href="https://www.youtube.com/@Adisanopalz" target="_blank" class="text-zinc-500 hover:text-white transition-colors">Youtube</a>
+                <a href="https://saweria.co/Sanopalz/" target="_blank" class="text-zinc-500 hover:text-white transition-colors">Saweria</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // --- Navbar Blur/Border Effect on Scroll ---
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
+        });
+
+        // --- Accordion Logic ---
+        function toggleTutorial(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            // Close all others
+            const allTuts = ['prism-tut', 'modrinth-tut'];
+            allTuts.forEach(tutId => {
+                if(tutId !== id) {
+                    const c = document.getElementById(tutId);
+                    const i = document.getElementById('icon-' + tutId);
+                    c.style.maxHeight = null;
+                    i.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            // Toggle selected
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // --- Copy IP Logic ---
+        function copyIP() {
+            const ipText = "premium-2.vy-node.my.id:25578";
+            
+            const textArea = document.createElement("textarea");
+            textArea.value = ipText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000); // hilangkan setelah 3 detik
+        }
+    </script>
+</body>
+</html>
